@@ -22,6 +22,10 @@ const validationSchema = Yup.object({
     .integer("La edad debe ser un número entero")
     .positive("La edad debe ser mayor que 0")
     .required("La edad es requerida"),
+
+  rol: Yup.string()
+    .oneOf(["admin", "moderador", "cliente"])
+    .required("El rol es requerido"),
 });
 
 
@@ -35,6 +39,7 @@ export default function UserForm() {
     email: "",
     contrasenia: "",
     edad: 0,
+    rol: "cliente",
   });
 
   const isEdit = Boolean(id);
@@ -48,6 +53,7 @@ export default function UserForm() {
           email: user.email || "",
           contrasenia: user.contrasenia || "",
           edad: user.edad || 0,
+          rol: user.rol || "cliente",
         });
       }
     }
@@ -57,7 +63,15 @@ export default function UserForm() {
     if (isEdit) {
       await editUser(Number(id), values);
     } else {
-      await addUser(values);
+      // Mapear 'contrasenia' a 'password' y enviar 'rol'
+      const payload = {
+        nombre: values.nombre,
+        email: values.email,
+        edad: values.edad,
+        password: values.contrasenia,
+        rol: values.rol
+      };
+      await addUser(payload);
     }
     navigate("/usuarios");
   };
@@ -103,30 +117,41 @@ export default function UserForm() {
               className="p-text-danger"
             />
           </div>
-          {!isEdit&&(
-          <div>
-            <label>Contraseña:</label>
-            <div className="p-inputgroup p-mb-1">
-              <Field
+          {!isEdit && (
+            <div>
+              <label>Contraseña:</label>
+              <div className="p-inputgroup p-mb-1">
+                <Field
+                  name="contrasenia"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Contraseña del usuario"
+                  className="p-inputtext p-component"
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  <i className={`pi ${showPassword ? "pi-eye-slash" : "pi-eye"}`} />
+                </span>
+              </div>
+              <ErrorMessage
                 name="contrasenia"
-                type={showPassword ? "text" : "password"}
-                placeholder="Contraseña del usuario"
-                className="p-inputtext p-component"
+                component="div"
+                className="p-text-danger"
               />
-              <span
-                className="p-inputgroup-addon"
-                style={{ cursor: "pointer" }}
-                onClick={() => setShowPassword((prev) => !prev)}
-              >
-                <i className={`pi ${showPassword ? "pi-eye-slash" : "pi-eye"}`} />
-              </span>
             </div>
-            <ErrorMessage
-              name="contrasenia"
-              component="div"
-              className="p-text-danger"
-            />
-          </div>
+          )}
+          {!isEdit && (
+            <div>
+              <label>Rol:</label>
+              <Field as="select" name="rol" className="p-inputtext p-component p-mb-3">
+                <option value="cliente">Cliente</option>
+                <option value="moderador">Moderador</option>
+                <option value="admin">Admin</option>
+              </Field>
+              <ErrorMessage name="rol" component="div" className="p-text-danger" />
+            </div>
           )}
           <div>
             <label>Edad:</label>

@@ -22,40 +22,37 @@ import './App.css';
 import 'primereact/resources/themes/lara-dark-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import { ToastProvider } from 'primereact/toast';
 
 function App() {
   return (
     <Router>
-      <ToastProvider>
-        <AuthProvider>
-          <Fragment>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path='/inicio-sesion' element={<PublicRoute><LoginForm/></PublicRoute>}/>
-              <Route path='/registro' element={<PublicRoute><RegisterForm/></PublicRoute>}/>
-              <Route
-                path="/productos/*"
-                element={
-                  <PrivateRoute>
-                    <ProductProvider>
-                      <ProductRoutes />
-                    </ProductProvider>
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/usuarios/*"
-                element={
-                  <UserProvider>
-                    <UserRoutes />
-                  </UserProvider>
-                }
-              />
-            </Routes>
-          </Fragment>
-        </AuthProvider>
-      </ToastProvider>
+      <AuthProvider>
+        <Fragment>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path='/inicio-sesion' element={<PublicRoute><LoginForm/></PublicRoute>}/>
+            <Route path='/registro' element={<PublicRoute><RegisterForm/></PublicRoute>}/>
+            <Route
+              path="/productos/*"
+              element={
+                <PrivateRoute>
+                  <ProductProvider>
+                    <ProductRoutes />
+                  </ProductProvider>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/usuarios/*"
+              element={
+                <UserProvider>
+                  <UserRoutes />
+                </UserProvider>
+              }
+            />
+          </Routes>
+        </Fragment>
+      </AuthProvider>
     </Router>
   );
 }

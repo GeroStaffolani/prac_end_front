@@ -53,7 +53,14 @@ export default function UsersView() {
       <Button label="Exportar PDF" icon="pi pi-file-pdf" className="p-button-rounded p-button-warning" onClick={handleExport} />
 
       {loading && <p>Cargando usuarios...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && error.includes('403') && (
+        <p style={{ color: 'red' }}>
+          No tienes permisos para ver la lista de usuarios. Inicia sesión nuevamente como admin.
+        </p>
+      )}
+      {error && !error.includes('403') && (
+        <p style={{ color: 'red' }}>{error}</p>
+      )}
       {errMsg && <p style={{ color: 'red' }}>{errMsg}</p>}
       {success && <p style={{ color: 'green' }}>{success}</p>}
 
@@ -113,7 +120,6 @@ export default function UsersView() {
           )}
         />
       </DataTable>
-      <h5>(sin darme cuenta hice el campo contraseña de más)</h5>
     </div>
   );
 }
