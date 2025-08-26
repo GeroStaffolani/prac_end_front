@@ -9,25 +9,46 @@ const Navbar = () => {
   return (
     <nav>
       <Link to="/">Inicio</Link>
-      {!user && <><Link to="/inicio-sesion">Login</Link><Link to="/registro">Registro</Link></>}
-      {user && <>
-        <Link to="/productos">Productos</Link>
-        <Link to="/usuarios">Usuarios</Link>
-        <span style={{marginLeft:8, marginRight:8}}>
-          <b>{user.nombre}</b>
-          <span style={{
-            background: user.rol === 'admin' ? '#673ab7' : user.rol === 'moderador' ? '#2196f3' : '#4caf50',
-            color: 'white',
-            borderRadius: '8px',
-            padding: '2px 8px',
-            marginLeft: '6px',
-            fontSize: '0.85em',
-            fontWeight: 600
-          }}>{user.rol.charAt(0).toUpperCase() + user.rol.slice(1)}</span>
-        </span>
-        <button onClick={logout}>Logout</button>
-      </>}
-      {user && user.rol === 'admin' && <Link to="/usuarios">Panel Admin</Link>}
+      {/* Sin sesión */}
+      {!user && (
+        <>
+          <Link to="/inicio-sesion">Login</Link>
+          <Link to="/registro">Registro</Link>
+        </>
+      )}
+      {/* Con sesión */}
+      {user && (
+        <>
+          <Link to="/productos">Productos</Link>
+          <Link to="/usuarios">Usuarios</Link>
+          {/* Panel Admin solo para admin */}
+          {user.rol === 'admin' && (
+            <Link to="/usuarios" style={{ fontWeight: 'bold', color: '#673ab7' }}>Panel Admin</Link>
+          )}
+          <span style={{ marginLeft: 8, marginRight: 8 }}>
+            <b>{user.nombre}</b>
+            <span
+              style={{
+                background:
+                  user.rol === 'admin'
+                    ? '#673ab7'
+                    : user.rol === 'moderador'
+                    ? '#2196f3'
+                    : '#4caf50',
+                color: 'white',
+                borderRadius: '8px',
+                padding: '2px 8px',
+                marginLeft: '6px',
+                fontSize: '0.85em',
+                fontWeight: 600,
+              }}
+            >
+              {user.rol.charAt(0).toUpperCase() + user.rol.slice(1)}
+            </span>
+          </span>
+          <button onClick={logout}>Logout</button>
+        </>
+      )}
     </nav>
   );
 };
