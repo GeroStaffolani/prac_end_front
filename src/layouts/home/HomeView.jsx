@@ -8,8 +8,8 @@ import { AuthContext } from '../../context/AuthContext';
     console.log(user)
     return (
       <div style={{ textAlign: 'center', padding: '20px' }}>
-        <h1>Bienvenido al CRUD de productos y usuarios</h1>
-        <h4>(aplicación fullstack en JavaScript donde el frontend (React) consume los datos expuestos por el backend (Express), permitiendo realizar CRUDs completos)</h4>
+        <h1>Sistema de administracion de usuarios y productos</h1>
+        <h4></h4>
         {user ?
         <div>
           <Link to="/usuarios">

@@ -101,10 +101,10 @@ export default function UsersView() {
             <span>{rowData.rol}</span>
           )
         )} />
-        <Column 
-          header="Acciones" 
-          body={(rowData) => (
-            user?.rol === 'admin' ? (
+        {user?.rol === 'admin' && (
+          <Column 
+            header="Acciones" 
+            body={(rowData) => (
               <>
                 <Link to={`/usuarios/editar/${rowData.id}`}>
                   <Button label="Editar" icon="pi pi-pencil" className="p-button-rounded p-button-info mr-2" />
@@ -116,9 +116,9 @@ export default function UsersView() {
                   onClick={() => deleteUser(rowData.id)} 
                 />
               </>
-            ) : null
-          )}
-        />
+            )}
+          />
+        )}
       </DataTable>
     </div>
   );

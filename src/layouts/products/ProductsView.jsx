@@ -7,9 +7,12 @@ import { Button } from 'primereact/button';
 import { useRef, useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
+import { AuthContext } from '../../context/AuthContext';
+import React from 'react';
 
 export default function ProductsView() {
   const { products, deleteProduct, loading, error } = useProductContext();
+  const { user } = React.useContext(AuthContext);
   const toast = useRef(null);
   const [pendingDelete, setPendingDelete] = useState(null);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -50,9 +53,11 @@ export default function ProductsView() {
     <div>
       <Toast ref={toast} />
       <h2>📦 Lista de Productos 📦</h2>
-      <Link to="/productos/crear">
-        <Button label="Crear nuevo producto" icon="pi pi-plus" className="p-button-rounded p-button-success" />
-      </Link>
+      {user?.rol === 'admin' && (
+        <Link to="/productos/crear">
+          <Button label="Crear nuevo producto" icon="pi pi-plus" className="p-button-rounded p-button-success" />
+        </Link>
+      )}
       <Link to="/">
         <Button label="Volver al inicio" icon="pi pi-home" className="p-button-rounded p-button-secondary" />
       </Link>
@@ -72,24 +77,25 @@ export default function ProductsView() {
       >
         <Column field="nombre" header="Nombre" />
         <Column field="precio" header="Precio" />
-
-        <Column 
-          header="Acciones" 
-          body={(rowData) => (
-            <>
-              <Link to={`/productos/editar/${rowData.id}`}>
-                <Button label="Editar" icon="pi pi-pencil" className="p-button-rounded p-button-info mr-2" />
-              </Link>
-              <Button 
-                label="Eliminar" 
-                icon="pi pi-trash" 
-                className="p-button-rounded p-button-danger" 
-                onClick={() => confirmDelete(rowData.id)} 
-                disabled={pendingDelete === rowData.id}
-              />
-            </>
-          )}
-        />
+        {user?.rol === 'admin' ? (
+          <Column 
+            header="Acciones" 
+            body={(rowData) => (
+              <>
+                <Link to={`/productos/editar/${rowData.id}`}>
+                  <Button label="Editar" icon="pi pi-pencil" className="p-button-rounded p-button-info mr-2" />
+                </Link>
+                <Button 
+                  label="Eliminar" 
+                  icon="pi pi-trash" 
+                  className="p-button-rounded p-button-danger" 
+                  onClick={() => confirmDelete(rowData.id)} 
+                  disabled={pendingDelete === rowData.id}
+                />
+              </>
+            )}
+          />
+        ) : null}
       </DataTable>
     </div>
   );
